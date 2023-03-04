@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input {
+  border-radius: 3px;
+  border: 1px solid rgba(39, 93, 197, 0.9);
+}
