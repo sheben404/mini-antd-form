@@ -10,9 +10,17 @@ interface FormProps<Values = any> extends BaseFormProps {
   onFinishFailed: (values: Values) => void
 }
 
-const Form: FC<FormProps> = ({ children, form }) => {
+const Form: FC<FormProps> = ({ children, form, onFinish, onFinishFailed = () => {} }) => {
+  form.setCallbacks({
+    onFinish,
+    onFinishFailed,
+  })
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        form.submit()
+      }}>
       <FieldContext.Provider value={form}>{children}</FieldContext.Provider>
     </form>
   )
