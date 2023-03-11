@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react'
 import FieldContext from './FieldContext'
+import { FieldEntity } from './FormStore'
 
-type FieldProps = {
+export type FieldProps = {
   children: ReactElement
   name: string
   rules: Array<{
@@ -10,9 +11,24 @@ type FieldProps = {
   }>
 }
 
-class Field extends React.Component<FieldProps> {
+class Field extends React.Component<FieldProps> implements FieldEntity {
   static contextType = FieldContext
   declare context: React.ContextType<typeof FieldContext>
+
+  unregister: () => void = () => {}
+
+  componentDidMount(): void {
+    this.unregister = this.context.getInternalHooks().registerField(this)
+  }
+
+  componentWillUnmount(): void {
+    this.unregister()
+  }
+
+  onStoreChange = () => {
+    this.forceUpdate()
+  }
+
   getControlled = () => {
     const { getFieldValue, setFieldsValue } = this.context
     const { name } = this.props
@@ -21,7 +37,6 @@ class Field extends React.Component<FieldProps> {
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value
         setFieldsValue({ [name]: newValue })
-        this.forceUpdate()
       },
     }
   }
