@@ -110,11 +110,15 @@ class FormStore {
   }
 }
 
-export const useForm = (): [FormInstance] => {
+export const useForm = (form?: FormInstance): [FormInstance] => {
   const formRef = useRef<FormInstance>()
   if (!formRef.current) {
-    const formStore = new FormStore()
-    formRef.current = formStore.getForm()
+    if (form) {
+      formRef.current = form
+    } else {
+      const formStore = new FormStore()
+      formRef.current = formStore.getForm()
+    }
   }
   return [formRef.current]
 }

@@ -24,15 +24,18 @@ const MyFormPage = () => {
     console.log('my-form-on-finish-failed', val)
   }
   return (
-    <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
-      <Field name='username' rules={[nameRules]}>
-        <Input placeholder='Username' />
-      </Field>
-      <Field name='password' rules={[passwordRules]}>
-        <Input placeholder='Password' />
-      </Field>
-      <button>Submit</button>
-    </Form>
+    <div>
+      <h3>my-form</h3>
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+        <Field name='username' rules={[nameRules]}>
+          <Input placeholder='Username' />
+        </Field>
+        <Field name='password' rules={[passwordRules]}>
+          <Input placeholder='Password' />
+        </Field>
+        <button>Submit</button>
+      </Form>
+    </div>
   )
 }
 

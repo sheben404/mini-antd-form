@@ -1,17 +1,19 @@
-import { FC } from 'react'
+import React, { ForwardRefRenderFunction } from 'react'
 import FieldContext from './FieldContext'
-import { FormInstance } from './FormStore'
+import { FormInstance, useForm } from './FormStore'
 
 type BaseFormProps = Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'>
 
-interface FormProps<Values = any> extends BaseFormProps {
-  form: FormInstance
+export interface FormProps<Values = any> extends BaseFormProps {
+  form?: FormInstance
   onFinish: (values: Values) => void
   onFinishFailed: (values: Values) => void
 }
 
-const Form: FC<FormProps> = ({ children, form, onFinish, onFinishFailed = () => {} }) => {
-  form.setCallbacks({
+const Form: ForwardRefRenderFunction<FormInstance, FormProps> = ({ children, form, onFinish, onFinishFailed = () => {} }, ref) => {
+  const [formInstance] = useForm(form)
+  React.useImperativeHandle(ref, () => formInstance)
+  formInstance?.setCallbacks({
     onFinish,
     onFinishFailed,
   })
@@ -19,9 +21,9 @@ const Form: FC<FormProps> = ({ children, form, onFinish, onFinishFailed = () => 
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        form.submit()
+        formInstance?.submit()
       }}>
-      <FieldContext.Provider value={form}>{children}</FieldContext.Provider>
+      <FieldContext.Provider value={formInstance}>{children}</FieldContext.Provider>
     </form>
   )
 }
